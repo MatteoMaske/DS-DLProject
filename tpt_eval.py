@@ -370,9 +370,17 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--run_name", type=str, default="no-name")
+    parser.add_argument("--ice_loss", action="store_true")
+    parser.add_argument("--ensamble_method", type=str, default="entropy", choices=["entropy", "std_dev", "harmonic_mean"])
+    parser.add_argument("--debug", action="store_true")
+    parser.add_argument("--backbone", type=str, default="ViT-B/16")
+    parser.add_argument("--dataset", type=str, default="imagenet_v2", choices=["imagenet_v2", "imagenet_a"])
 
     args = parser.parse_args()
     RUN_NAME = args.run_name
+    ENSAMBLE_METHOD = args.ensamble_method
+    DEBUG = args.debug
+
 
     if torch.cuda.is_available():
         DEVICE = "cuda"
@@ -399,4 +407,4 @@ if __name__ == "__main__":
     logger.addHandler(file_handler)
     logger.addHandler(stderr_handler)
 
-    main(device=DEVICE)
+    main(dataset_name=args.dataset, backbone=args.backbone, device=DEVICE, ice_loss=args.ice_loss)

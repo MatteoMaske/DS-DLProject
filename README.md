@@ -1,40 +1,35 @@
-README still in progress. Kindly refer to the notebook in the meantime.
+# Test-time Adaptation for few-shots classification using CLIP
 
-<!-- remove line to remove comments
-# CLIP
+<img src="source/images/architecture-schema.png" width="100%">
 
-[[Colab]](link_to_colab)
+## DESCRIPTION
+The project aims to improve the performance of the zero-shot CLIP model by OpenAI on the ImageNetA and ImageNetV2 datasets. We propose an ensemble techniques on CLIP to improve its 0/1-shot capability. The techniques used include TPT ([Test-Time Prompt Tuning](https://github.com/azshue/TPT?tab=readme-ov-file)), CoOp ([Context Optimization](https://github.com/KaiyangZhou/CoOp)), and CoCa ([Contrastive Captioner(https://github.com/mlfoundations/open_clip.git)). On top of that we propose a new architecture which exploits the captions obtained from CoCa to improve the classification performance of CLIP. This is done by ensambling the logits coming from the standard CLIP model with the logits obtained from the information contained in the captions. The captions are used to filter the images in the batch and the logits are combined using three different approaches: a standard deviation based approach proposed by Yang. et al. [Image-Caption Encoding for Improving Zero-Shot Generalisation](https://arxiv.org/pdf/2402.02662), a harmonic mean of the logits (ours) and an **entropy-weighted average** of the logits (ours) which achieved a **+2%** improvement in Top-1 accuracy.
 
-PROJECT DESCRIPTION
-Overall copy the approach in the notebook
-Add subsections if missing here
-## Task
+## Project setup
+In order to be able to run the project you need to have the following libraries installed and the following directories created:
+
+```bash
+pip install open_clip_torch gdown matplotlib transformers tensorboard
+pip install git+https://github.com/openai/CLIP.git
+mkdir caption_reports batch_predictions batch_reports runs
+```
+
+Then you need to download the weights of CoOp which can be easily installed by following the snippet of code provided in the Project setup section of the notebook.
 
 ## Dataset
 
-## Approach
-Also add link to TPT, CoOp and CoCa explanations -> check notebook + Images
-<!-- remove line to remove comments
-### TPT
+The dataset used for the project is the ImageNetA and ImageNetV2 datasets. These imagenet variants are the most used when testing adaption of a model.
 
-### CoOp
-
-### CoCa
-
-### Our Approach
-
+Please refer to the dataset section of the project notebook to have a simple script to download the datasets.
 
 ## Usage
-detail installation
+The main script is `tpt_eval.py` which can be run with the following arguments:
 
 ```bash
-$ git clone --recursive https://github.com/rogergheser/DS-DLProject/
-$ pip -r requirements.txt
+python tpt_eval.py --backbone ViT-B/16 --dataset ImageNetV2 --method entropy-avg --ice_loss --run_name imagenetV2/entropy-avg
 ```
+In this example we are running the script with the ViT-B/16 backbone on the ImageNetV2 dataset using the entropy-avg method. The ice_loss flag is used to enable the ICE loss which is a loss function that enables the ensembling of the logits. The run_name is used to save the logs of the run in the `runs` directory.
 
-## Usage
-
-Explain how to pass arguments to the script
 
 ## See Also
 
